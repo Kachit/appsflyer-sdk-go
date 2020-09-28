@@ -2,6 +2,7 @@ package appsflyer_sdk
 
 import (
 	"fmt"
+	"github.com/gocarina/gocsv"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -70,7 +71,6 @@ func (rb *RequestBuilder) buildPath(path string) string {
 
 type Response struct {
 	raw *http.Response
-	csv *CSVParser
 }
 
 func (r *Response) IsSuccess() bool {
@@ -81,18 +81,23 @@ func (r *Response) GetRaw() *http.Response {
 	return r.raw
 }
 
-func (r *Response) GetData() ([]Report, error) {
+func (r *Response) GetData() ([]*Report, error) {
 	defer r.raw.Body.Close()
 	body, err := ioutil.ReadAll(r.raw.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	var entities []Report
-	if err := r.csv.Parse(string(body), Report{}, func(v interface{}) {
-		entities = append(entities, v.(Report))
-	}); err != nil {
-		return nil, err
+	reports := []*Report{}
+	err = gocsv.UnmarshalBytes(body, &reports)
+	return reports, err
+}
+
+func (r *Response) UnmarshalCSV(reports []*Report) error {
+	defer r.raw.Body.Close()
+	body, err := ioutil.ReadAll(r.raw.Body)
+	if err != nil {
+		return err
 	}
-	return entities, nil
+	return gocsv.UnmarshalBytes(body, &reports)
 }

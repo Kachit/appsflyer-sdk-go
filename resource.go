@@ -3,8 +3,7 @@ package appsflyer_sdk
 import "fmt"
 
 type ResourceAbstract struct {
-	tr  *Transport
-	csv *CSVParser
+	tr *Transport
 }
 
 func (r *ResourceAbstract) get(path string, query map[string]interface{}) (*Response, error) {
@@ -12,9 +11,9 @@ func (r *ResourceAbstract) get(path string, query map[string]interface{}) (*Resp
 	if err != nil {
 		return nil, fmt.Errorf("ResourceAbstract@get request: %v", err)
 	}
-	return &Response{raw: rsp, csv: r.csv}, nil
+	return &Response{raw: rsp}, nil
 }
 
 func newResourceAbstract(transport *Transport) *ResourceAbstract {
-	return &ResourceAbstract{tr: transport, csv: &CSVParser{}}
+	return &ResourceAbstract{tr: transport}
 }
