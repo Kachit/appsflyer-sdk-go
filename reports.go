@@ -1,6 +1,7 @@
 package appsflyer_sdk
 
 import (
+	"fmt"
 	"strings"
 	"time"
 )
@@ -52,6 +53,7 @@ func (rr *ReportsResource) GetInstallReports(filter *InstallsReportFilter) (*Res
 type InstallsReportFilter struct {
 	StartDate        time.Time
 	EndDate          time.Time
+	UseTimezone      bool
 	AdditionalFields []string
 }
 
@@ -59,16 +61,29 @@ func (f *InstallsReportFilter) Build() map[string]interface{} {
 	params := make(map[string]interface{})
 	params["from"] = f.StartDate.Format("2006-01-02")
 	params["to"] = f.EndDate.Format("2006-01-02")
-	params["timezone"] = f.StartDate.Location().String()
+	if f.UseTimezone {
+		params["timezone"] = f.StartDate.Location().String()
+	}
 	if f.AdditionalFields != nil {
 		params["additional_fields"] = strings.Join(f.AdditionalFields, ",")
 	}
 	return params
 }
 
+func (f *InstallsReportFilter) IsValid() error {
+	if f.StartDate.IsZero() {
+		return fmt.Errorf("InstallsReportFilter@IsValid: %v", "StartDate is required")
+	}
+	if f.EndDate.IsZero() {
+		return fmt.Errorf("InstallsReportFilter@IsValid: %v", "EndDate is required")
+	}
+	return nil
+}
+
 type AppsEventReportFilter struct {
 	StartDate        time.Time
 	EndDate          time.Time
+	UseTimezone      bool
 	AdditionalFields []string
 }
 
@@ -76,9 +91,21 @@ func (f *AppsEventReportFilter) Build() map[string]interface{} {
 	params := make(map[string]interface{})
 	params["from"] = f.StartDate.Format("2006-01-02")
 	params["to"] = f.EndDate.Format("2006-01-02")
-	params["timezone"] = f.StartDate.Location().String()
+	if f.UseTimezone {
+		params["timezone"] = f.StartDate.Location().String()
+	}
 	if f.AdditionalFields != nil {
 		params["additional_fields"] = strings.Join(f.AdditionalFields, ",")
 	}
 	return params
+}
+
+func (f *AppsEventReportFilter) IsValid() error {
+	if f.StartDate.IsZero() {
+		return fmt.Errorf("AppsEventReportFilter@IsValid: %v", "StartDate is required")
+	}
+	if f.EndDate.IsZero() {
+		return fmt.Errorf("AppsEventReportFilter@IsValid: %v", "EndDate is required")
+	}
+	return nil
 }
