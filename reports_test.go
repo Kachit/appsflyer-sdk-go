@@ -50,3 +50,26 @@ func Test_Reports_InstallsReportFilter_IsValidFailedDateTo(t *testing.T) {
 	assert.Error(t, err)
 	assert.Equal(t, "InstallsReportFilter@IsValid: EndDate is required", err.Error())
 }
+
+func Test_Reports_AppsEventReportFilter_IsValidSuccess(t *testing.T) {
+	filter := AppsEventReportFilter{}
+	filter.StartDate = time.Date(2020, time.Month(1), 10, 0, 0, 0, 0, time.UTC)
+	filter.EndDate = time.Date(2020, time.Month(1), 20, 0, 0, 0, 0, time.UTC)
+	assert.Nil(t, filter.IsValid())
+}
+
+func Test_Reports_AppsEventReportFilter_IsValidFailedDateFrom(t *testing.T) {
+	filter := AppsEventReportFilter{}
+	filter.EndDate = time.Date(2020, time.Month(1), 20, 0, 0, 0, 0, time.UTC)
+	err := filter.IsValid()
+	assert.Error(t, err)
+	assert.Equal(t, "AppsEventReportFilter@IsValid: StartDate is required", err.Error())
+}
+
+func Test_Reports_AppsEventReportFilter_IsValidFailedDateTo(t *testing.T) {
+	filter := AppsEventReportFilter{}
+	filter.StartDate = time.Date(2020, time.Month(1), 20, 0, 0, 0, 0, time.UTC)
+	err := filter.IsValid()
+	assert.Error(t, err)
+	assert.Equal(t, "AppsEventReportFilter@IsValid: EndDate is required", err.Error())
+}

@@ -71,9 +71,39 @@ type Report struct {
 
 type ReportsResource struct {
 	*ResourceAbstract
+	rb *ReportsRequestBuilder
+}
+
+type ReportsRequestBuilder struct {
+	cfg *Config
+}
+
+func (rb *ReportsRequestBuilder) buildQueryParams(query map[string]interface{}) map[string]interface{} {
+	query["api_token"] = rb.cfg.APIToken
+	return query
+}
+
+func (rb *ReportsRequestBuilder) buildPath(path string) string {
+	return "/export/" + rb.cfg.AppId + "/" + path
+}
+
+func NewReportsResource(resource *ResourceAbstract) *ReportsResource {
+	return &ReportsResource{ResourceAbstract: resource, rb: &ReportsRequestBuilder{resource.config}}
 }
 
 func (rr *ReportsResource) GetInstallReports(filter *InstallsReportFilter) (*Response, error) {
+	err := filter.IsValid()
+	if err != nil {
+		return nil, fmt.Errorf("ReportsResource@GetInstallReports: %v", err)
+	}
+	return rr.get("installs_report/v5", filter.Build())
+}
+
+func (rr *ReportsResource) GetAppsEventReports(filter *AppsEventReportFilter) (*Response, error) {
+	err := filter.IsValid()
+	if err != nil {
+		return nil, fmt.Errorf("ReportsResource@GetAppsEventReports: %v", err)
+	}
 	return rr.get("installs_report/v5", filter.Build())
 }
 

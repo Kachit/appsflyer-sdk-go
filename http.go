@@ -49,24 +49,19 @@ func (rb *RequestBuilder) buildUri(path string, query map[string]interface{}) (u
 	if err != nil {
 		return nil, fmt.Errorf("RequestBuilder@buildUri parse: %v", err)
 	}
-	u.Path = rb.buildPath(path)
+	u.Path = "/" + path
 	u.RawQuery = rb.buildQueryParams(query)
 	return u, err
 }
 
 func (rb *RequestBuilder) buildQueryParams(query map[string]interface{}) string {
 	q := url.Values{}
-	q.Set("api_token", rb.cfg.APIToken)
 	if query != nil {
 		for k, v := range query {
 			q.Set(k, fmt.Sprintf("%v", v))
 		}
 	}
 	return q.Encode()
-}
-
-func (rb *RequestBuilder) buildPath(path string) string {
-	return "/export/" + rb.cfg.AppId + "/" + path
 }
 
 type Response struct {
