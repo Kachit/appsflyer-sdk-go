@@ -59,3 +59,13 @@ func Test_HTTP_Transport_RequestGET(t *testing.T) {
 	resp, _ := transport.get("foo", nil)
 	assert.NotEmpty(t, resp)
 }
+
+func Test_HTTP_Response_IsSuccessTrue(t *testing.T) {
+	response := &Response{raw: buildStubResponseFromFile(http.StatusOK, "stubs/reports/installs.csv")}
+	assert.True(t, response.IsSuccess())
+}
+
+func Test_HTTP_Response_IsSuccessFalse(t *testing.T) {
+	response := &Response{raw: buildStubResponseFromFile(http.StatusBadRequest, "stubs/reports/installs.csv")}
+	assert.False(t, response.IsSuccess())
+}

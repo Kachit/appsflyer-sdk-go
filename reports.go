@@ -96,7 +96,7 @@ func (rr *ReportsResource) GetInstallReports(filter *InstallsReportFilter) (*Res
 	if err != nil {
 		return nil, fmt.Errorf("ReportsResource@GetInstallReports: %v", err)
 	}
-	return rr.get("installs_report/v5", filter.Build())
+	return rr.get(rr.rb.buildPath("installs_report/v5"), rr.rb.buildQueryParams(filter.Build()))
 }
 
 func (rr *ReportsResource) GetAppsEventReports(filter *AppsEventReportFilter) (*Response, error) {
@@ -104,7 +104,7 @@ func (rr *ReportsResource) GetAppsEventReports(filter *AppsEventReportFilter) (*
 	if err != nil {
 		return nil, fmt.Errorf("ReportsResource@GetAppsEventReports: %v", err)
 	}
-	return rr.get("installs_report/v5", filter.Build())
+	return rr.get(rr.rb.buildPath("installs_report/v5"), rr.rb.buildQueryParams(filter.Build()))
 }
 
 type InstallsReportFilter struct {

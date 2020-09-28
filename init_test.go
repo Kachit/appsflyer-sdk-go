@@ -20,6 +20,10 @@ func buildStubClient() *Client {
 	return NewClient(buildStubConfig(), nil)
 }
 
+func buildStubReportsResource() *ReportsResource {
+	return buildStubClient().Reports()
+}
+
 func loadStubResponseData(path string) ([]byte, error) {
 	return ioutil.ReadFile(path)
 }
@@ -29,7 +33,7 @@ func buildStubResponseFromString(statusCode int, json string) *http.Response {
 	return &http.Response{Body: body, StatusCode: statusCode}
 }
 
-func buildStubResponseFromData(statusCode int, path string) *http.Response {
+func buildStubResponseFromFile(statusCode int, path string) *http.Response {
 	data, _ := loadStubResponseData(path)
 	body := ioutil.NopCloser(bytes.NewReader(data))
 	return &http.Response{Body: body, StatusCode: statusCode}
