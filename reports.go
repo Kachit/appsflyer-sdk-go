@@ -38,7 +38,7 @@ type Report struct {
 	PostalCode           string          `json:"postal_code" csv:"Postal Code"`
 	DMA                  string          `json:"dma" csv:"DMA"`
 	IP                   string          `json:"ip" csv:"IP"`
-	WIFI                 string          `json:"wifi" csv:"WIFI"`
+	WIFI                 CustomBoolean   `json:"wifi" csv:"WIFI"`
 	Language             string          `json:"language" csv:"Language"`
 	AppsflyerID          string          `json:"appsflyer_id" csv:"AppsFlyer ID"`
 	AdvertisingID        string          `json:"advertising_id" csv:"Advertising ID"`
@@ -52,7 +52,7 @@ type Report struct {
 	AppID                string          `json:"app_id" csv:"App ID"`
 	AppName              string          `json:"app_name" csv:"App Name"`
 	BundleID             string          `json:"bundle_id" csv:"Bundle ID"`
-	IsRetargeting        string          `json:"is_retargeting" csv:"Is Retargeting"`
+	IsRetargeting        CustomBoolean   `json:"is_retargeting" csv:"Is Retargeting"`
 	CustomerUserID       string          `json:"customer_user_id" csv:"Customer User ID"`
 
 	AndroidID      string `json:"android_id" csv:"Android ID"`
@@ -67,16 +67,6 @@ type Report struct {
 	InstallAppStore string `json:"install_app_store" csv:"Install App Store"`
 	MatchType       string `json:"match_type" csv:"Match Type"`
 	DeviceCategory  string `json:"device_category" csv:"Device Category"`
-}
-
-func (r *Report) GetIsRetargeting() bool {
-	switch strings.ToLower(r.IsRetargeting) {
-	case "false":
-		return false
-	case "true":
-		return true
-	}
-	return false
 }
 
 type ReportsResource struct {
