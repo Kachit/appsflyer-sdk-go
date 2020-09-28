@@ -2,7 +2,7 @@ package appsflyer_sdk
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"time"
 )
 
@@ -14,12 +14,12 @@ func (cf *CustomFloat64) UnmarshalJSON(data []byte) error {
 	if data[0] == '"' {
 		err := json.Unmarshal(data[1:len(data)-1], &cf.Float64)
 		if err != nil {
-			return errors.New("CustomFloat64: UnmarshalJSON: " + err.Error())
+			return fmt.Errorf("CustomFloat64: UnmarshalJSON: %v", err)
 		}
 	} else {
 		err := json.Unmarshal(data, &cf.Float64)
 		if err != nil {
-			return errors.New("CustomFloat64: UnmarshalJSON: " + err.Error())
+			return fmt.Errorf("CustomFloat64: UnmarshalJSON: %v", err)
 		}
 	}
 	return nil
@@ -41,18 +41,24 @@ func (ct *CustomTimestamp) UnmarshalJSON(data []byte) error {
 	var ts string
 	err := json.Unmarshal(data, &ts)
 	if err != nil {
-		return errors.New("CustomTimestamp: UnmarshalJSON: " + err.Error())
+		return fmt.Errorf("CustomTimestamp: UnmarshalJSON: %v", err)
 	}
 	ct.Timestamp, err = time.Parse("2006-01-02 15:04:05", ts)
 	if err != nil {
-		return errors.New("CustomTimestamp: UnmarshalJSON ParseTime: " + err.Error())
+		return fmt.Errorf("CustomTimestamp: UnmarshalJSON ParseTime: %v", err)
 	}
 	return nil
 }
 
-func (ct *CustomTimestamp) UnmarshalCSV(csv string) (err error) {
-	ct.Timestamp, err = time.Parse("2006-01-02 15:04:05", csv)
-	return err
+func (ct *CustomTimestamp) UnmarshalCSV(csv string) error {
+	if csv != "" {
+		var err error
+		ct.Timestamp, err = time.Parse("2006-01-02 15:04:05", csv)
+		if err != nil {
+			return fmt.Errorf("CustomTimestamp: UnmarshalJSON ParseTime: %v", err)
+		}
+	}
+	return nil
 }
 
 type CustomDate struct {
@@ -67,11 +73,11 @@ func (ct *CustomDate) UnmarshalJSON(data []byte) error {
 	var ts string
 	err := json.Unmarshal(data, &ts)
 	if err != nil {
-		return errors.New("CustomTimestamp: UnmarshalJSON: " + err.Error())
+		return fmt.Errorf("CustomTimestamp: UnmarshalJSON: %v", err)
 	}
 	ct.Date, err = time.Parse("2006-01-02", ts)
 	if err != nil {
-		return errors.New("CustomTimestamp: UnmarshalJSON ParseTime: " + err.Error())
+		return fmt.Errorf("CustomTimestamp: UnmarshalJSON ParseTime: %v", err)
 	}
 	return nil
 }

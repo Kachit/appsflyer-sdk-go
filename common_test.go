@@ -25,6 +25,21 @@ func TestCommon_CustomTimestamp_UnmarshalJSON(t *testing.T) {
 	assert.Equal(t, "2020-09-10 15:15:15", c.Value().Format(format))
 }
 
+func TestCommon_CustomTimestamp_UnmarshalCSVFilled(t *testing.T) {
+	c := CustomTimestamp{}
+	format := "2006-01-02 15:04:05"
+	str := "2020-09-10 15:15:15"
+	_ = c.UnmarshalCSV(str)
+	assert.Equal(t, "2020-09-10 15:15:15", c.Value().Format(format))
+}
+
+func TestCommon_CustomTimestamp_UnmarshalCSVEmpty(t *testing.T) {
+	c := CustomTimestamp{}
+	str := ""
+	_ = c.UnmarshalCSV(str)
+	assert.True(t, c.Value().IsZero())
+}
+
 func TestCommon_CustomDate_UnmarshalJSON(t *testing.T) {
 	c := CustomDate{}
 	format := "2006-01-02"
