@@ -1,4 +1,4 @@
-# Appsflyer SDK GO
+# Appsflyer SDK GO (Unofficial)
 [![Build Status](https://travis-ci.org/Kachit/appsflyer-sdk-go.svg?branch=master)](https://travis-ci.org/Kachit/appsflyer-sdk-go)
 [![codecov](https://codecov.io/gh/Kachit/appsflyer-sdk-go/branch/master/graph/badge.svg)](https://codecov.io/gh/Kachit/appsflyer-sdk-go)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/kachit/appsflyer-sdk-go/blob/master/LICENSE)
