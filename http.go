@@ -77,6 +77,11 @@ func (r *Response) GetRawResponse() *http.Response {
 	return r.raw
 }
 
+func (r *Response) GetRawBody() (string, error) {
+	data, err := r.ReadBody()
+	return string(data), err
+}
+
 func (r *Response) ReadBody() ([]byte, error) {
 	defer r.raw.Body.Close()
 	return ioutil.ReadAll(r.raw.Body)

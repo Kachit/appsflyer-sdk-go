@@ -6,8 +6,36 @@ import (
 	"time"
 )
 
-func Test_Reports_InstallsReportFilter_Build(t *testing.T) {
+func Test_Reports_InstallsReportFilter_BuildRequired(t *testing.T) {
 	filter := InstallsReportFilter{}
+	filter.StartDate = time.Date(2020, time.Month(1), 10, 0, 0, 0, 0, time.UTC)
+	filter.EndDate = time.Date(2020, time.Month(1), 20, 0, 0, 0, 0, time.UTC)
+
+	expected := make(map[string]interface{})
+	expected["from"] = "2020-01-10"
+	expected["to"] = "2020-01-20"
+	result := filter.Build()
+	assert.Equal(t, expected, result)
+}
+
+func Test_Reports_InstallsReportFilter_BuildFull(t *testing.T) {
+	filter := InstallsReportFilter{}
+	filter.StartDate = time.Date(2020, time.Month(1), 10, 0, 0, 0, 0, time.UTC)
+	filter.EndDate = time.Date(2020, time.Month(1), 20, 0, 0, 0, 0, time.UTC)
+	filter.UseTimezone = true
+	filter.AdditionalFields = []string{"foo"}
+
+	expected := make(map[string]interface{})
+	expected["from"] = "2020-01-10"
+	expected["to"] = "2020-01-20"
+	expected["additional_fields"] = "foo"
+	expected["timezone"] = "UTC"
+	result := filter.Build()
+	assert.Equal(t, expected, result)
+}
+
+func Test_Reports_AppsEventReportFilter_BuildRequired(t *testing.T) {
+	filter := AppsEventReportFilter{}
 	filter.StartDate = time.Date(2020, time.Month(1), 10, 0, 0, 0, 0, time.UTC)
 	filter.EndDate = time.Date(2020, time.Month(1), 20, 0, 0, 0, 0, time.UTC)
 	expected := make(map[string]interface{})
@@ -17,13 +45,18 @@ func Test_Reports_InstallsReportFilter_Build(t *testing.T) {
 	assert.Equal(t, expected, result)
 }
 
-func Test_Reports_AppsEventReportFilter_Build(t *testing.T) {
+func Test_Reports_AppsEventReportFilter_BuildFull(t *testing.T) {
 	filter := AppsEventReportFilter{}
 	filter.StartDate = time.Date(2020, time.Month(1), 10, 0, 0, 0, 0, time.UTC)
 	filter.EndDate = time.Date(2020, time.Month(1), 20, 0, 0, 0, 0, time.UTC)
+	filter.UseTimezone = true
+	filter.AdditionalFields = []string{"foo"}
+
 	expected := make(map[string]interface{})
 	expected["from"] = "2020-01-10"
 	expected["to"] = "2020-01-20"
+	expected["additional_fields"] = "foo"
+	expected["timezone"] = "UTC"
 	result := filter.Build()
 	assert.Equal(t, expected, result)
 }

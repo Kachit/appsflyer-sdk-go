@@ -69,3 +69,19 @@ func Test_HTTP_Response_IsSuccessFalse(t *testing.T) {
 	response := &Response{raw: buildStubResponseFromFile(http.StatusBadRequest, "stubs/data/reports/installs.csv")}
 	assert.False(t, response.IsSuccess())
 }
+
+func Test_HTTP_Response_GetRawResponse(t *testing.T) {
+	rsp := buildStubResponseFromFile(http.StatusOK, "stubs/data/reports/installs.csv")
+	response := &Response{raw: rsp}
+	raw := response.GetRawResponse()
+	assert.NotEmpty(t, raw)
+	assert.Equal(t, http.StatusOK, raw.StatusCode)
+}
+
+func Test_HTTP_Response_GetRawBody(t *testing.T) {
+	data, _ := loadStubResponseData("stubs/data/reports/installs.csv")
+	rsp := buildStubResponseFromFile(http.StatusBadRequest, "stubs/data/reports/installs.csv")
+	response := &Response{raw: rsp}
+	str, _ := response.GetRawBody()
+	assert.Equal(t, string(data), str)
+}
