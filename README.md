@@ -25,23 +25,32 @@ import (
 )
 
 func main() {
-	location, _ := time.LoadLocation("Europe/Moscow")
-	
-	from := time.Date(2020, time.Month(9), 10, 0, 0, 0, 0, location)
-	to := time.Date(2020, time.Month(9), 11, 0, 0, 0, 0, location)
-	
-	config := appsflyer_sdk.NewConfig("foo", "bar")
-	client := appsflyer_sdk.NewClient(config, nil)
-	
-	filter := &appsflyer_sdk.InstallsReportFilter{
-		StartDate: from,
-		EndDate: to,
-	}
-	response, err := client.Reports().GetInstallReports(filter)
-    if err != nil {
-        fmt.Println(response.GetData())
+    config := appsflyer_sdk.NewConfig("foo", "bar")
+    client := appsflyer_sdk.NewClientFromConfig(config, nil)
+
+    from := time.Date(2020, time.Month(9), 10, 0, 0, 0, 0, time.UTC)
+    to := time.Date(2020, time.Month(9), 11, 0, 0, 0, 0, time.UTC)
+
+    filter := &appsflyer_sdk.InstallsReportFilter{
+        StartDate: from,
+        EndDate: to,
     }
-	
-	fmt.Println(err)
+    response, err := client.Reports().GetInstallReports(filter)
+    if err != nil {
+        fmt.Println(err)
+    }
+
+    if !response.IsSuccess() {
+        fmt.Println(response.GetError())
+    }
+
+    reports := []*appsflyer_sdk.Report{}
+    err = response.UnmarshalCSV(reports)
+
+    if !response.IsSuccess() {
+        fmt.Println(response.GetError())
+    }
+    
+    fmt.Println(reports)
 }
 ```

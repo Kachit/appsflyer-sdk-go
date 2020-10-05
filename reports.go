@@ -6,10 +6,6 @@ import (
 	"time"
 )
 
-type ReportsCollection struct {
-	Reports []*Report
-}
-
 type Report struct {
 	AttributedTouchType  string          `json:"attributed_touch_type" csv:"Attributed Touch Type"`
 	AttributedTouchTime  CustomTimestamp `json:"attributed_touch_time" csv:"Attributed Touch Time"`

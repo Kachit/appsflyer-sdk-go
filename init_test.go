@@ -17,7 +17,7 @@ func buildStubConfig() *Config {
 }
 
 func buildStubClient() *Client {
-	return NewClient(buildStubConfig(), nil)
+	return NewClientFromConfig(buildStubConfig(), nil)
 }
 
 func buildStubReportsResource() *ReportsResource {

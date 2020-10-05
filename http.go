@@ -1,6 +1,7 @@
 package appsflyer_sdk
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gocarina/gocsv"
 	"io/ioutil"
@@ -72,27 +73,46 @@ func (r *Response) IsSuccess() bool {
 	return r.raw.StatusCode < http.StatusMultipleChoices
 }
 
-func (r *Response) GetRaw() *http.Response {
+func (r *Response) GetRawResponse() *http.Response {
 	return r.raw
 }
 
-func (r *Response) GetData() ([]*Report, error) {
+func (r *Response) ReadBody() ([]byte, error) {
 	defer r.raw.Body.Close()
-	body, err := ioutil.ReadAll(r.raw.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	reports := []*Report{}
-	err = gocsv.UnmarshalBytes(body, &reports)
-	return reports, err
+	return ioutil.ReadAll(r.raw.Body)
 }
 
-func (r *Response) UnmarshalCSV(reports []*Report) error {
-	defer r.raw.Body.Close()
-	body, err := ioutil.ReadAll(r.raw.Body)
+func (r *Response) GetError() (*ErrorResult, error) {
+	var result ErrorResult
+	err := r.UnmarshalError(&result)
+	if err != nil {
+		return nil, fmt.Errorf("Response@GetError Unmarshal: %v", err)
+	}
+	return &result, nil
+}
+
+func (r *Response) UnmarshalError(errorResult *ErrorResult) error {
+	data, err := r.ReadBody()
+	if err != nil {
+		return fmt.Errorf("Response@UnmarshalError read body: %v", err)
+	}
+
+	err = json.Unmarshal(data, &errorResult)
+	if err != nil {
+		return fmt.Errorf("Response@UnmarshalError Unmarshal: %v", err)
+	}
+	return nil
+}
+
+func (r *Response) UnmarshalCSV(v interface{}) error {
+	body, err := r.ReadBody()
 	if err != nil {
 		return err
 	}
-	return gocsv.UnmarshalBytes(body, &reports)
+	return gocsv.UnmarshalBytes(body, v)
+}
+
+type ErrorResult struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }

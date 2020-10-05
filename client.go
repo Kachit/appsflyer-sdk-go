@@ -12,10 +12,19 @@ func (c *Client) Reports() *ReportsResource {
 	return NewReportsResource(resource)
 }
 
-func NewClient(config *Config, cl *http.Client) *Client {
+func NewClientFromConfig(config *Config, cl *http.Client) *Client {
 	if cl == nil {
 		cl = &http.Client{}
 	}
+	transport := newHttpTransport(config, cl)
+	return &Client{transport: transport, config: config}
+}
+
+func NewClientFromCredentials(apiToken string, appId string, cl *http.Client) *Client {
+	if cl == nil {
+		cl = &http.Client{}
+	}
+	config := NewConfig(apiToken, appId)
 	transport := newHttpTransport(config, cl)
 	return &Client{transport: transport, config: config}
 }

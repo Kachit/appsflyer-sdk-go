@@ -37,7 +37,7 @@ func Test_HTTP_Transport_Request(t *testing.T) {
 	cfg := buildStubConfig()
 	transport := newHttpTransport(cfg, nil)
 
-	body, _ := loadStubResponseData("stubs/reports/installs.csv")
+	body, _ := loadStubResponseData("stubs/data/reports/installs.csv")
 
 	httpmock.RegisterResponder("GET", cfg.Uri+"/foo", httpmock.NewBytesResponder(http.StatusOK, body))
 
@@ -52,7 +52,7 @@ func Test_HTTP_Transport_RequestGET(t *testing.T) {
 	cfg := buildStubConfig()
 	transport := newHttpTransport(cfg, nil)
 
-	body, _ := loadStubResponseData("stubs/reports/installs.csv")
+	body, _ := loadStubResponseData("stubs/data/reports/installs.csv")
 
 	httpmock.RegisterResponder("GET", cfg.Uri+"/foo", httpmock.NewBytesResponder(http.StatusOK, body))
 
@@ -61,11 +61,11 @@ func Test_HTTP_Transport_RequestGET(t *testing.T) {
 }
 
 func Test_HTTP_Response_IsSuccessTrue(t *testing.T) {
-	response := &Response{raw: buildStubResponseFromFile(http.StatusOK, "stubs/reports/installs.csv")}
+	response := &Response{raw: buildStubResponseFromFile(http.StatusOK, "stubs/data/reports/installs.csv")}
 	assert.True(t, response.IsSuccess())
 }
 
 func Test_HTTP_Response_IsSuccessFalse(t *testing.T) {
-	response := &Response{raw: buildStubResponseFromFile(http.StatusBadRequest, "stubs/reports/installs.csv")}
+	response := &Response{raw: buildStubResponseFromFile(http.StatusBadRequest, "stubs/data/reports/installs.csv")}
 	assert.False(t, response.IsSuccess())
 }
