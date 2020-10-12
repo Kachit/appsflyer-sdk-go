@@ -88,7 +88,7 @@ func (ct *CustomTimestamp) UnmarshalCSV(csv string) error {
 
 func (ct *CustomTimestamp) MarshalJSON() ([]byte, error) {
 	if ct.Timestamp.IsZero() {
-		return []byte(""), nil
+		return []byte(`""`), nil
 	}
 	formatted := ct.Timestamp.Format(CustomTimestampFormatDefault)
 	jsonData, err := json.Marshal(formatted)
@@ -119,7 +119,7 @@ func (ct *CustomDate) UnmarshalCSV(csv string) error {
 
 func (ct *CustomDate) MarshalJSON() ([]byte, error) {
 	if ct.Date.IsZero() {
-		return []byte(""), nil
+		return []byte(`""`), nil
 	}
 	jsonData, err := json.Marshal(ct.Date.Format(CustomDateFormatDefault))
 	if err != nil {
