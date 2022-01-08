@@ -1,4 +1,4 @@
-package appsflyer_sdk
+package appsflyer
 
 import (
 	"fmt"

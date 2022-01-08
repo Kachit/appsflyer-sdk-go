@@ -1,4 +1,4 @@
-package appsflyer_sdk
+package appsflyer
 
 const (
 	ApiBaseUrl = "https://hq.appsflyer.com"
